@@ -60,3 +60,73 @@ const estudiantes = [
   { nombre: "Carla", notas: [95, 92, 98] },
   { nombre: "Pedro", notas: [40, 45, 50] }
 ];
+
+
+function calcularPromedio(notas){
+    const suma = (notas[0] + notas[1] + notas [2]) / 3;
+    return Number(suma.toFixed(2))
+}
+
+const obtenerEstado = function(promedio){
+    let estado;
+    if(promedio >= 60){
+        estado = "Aprobado";
+    } else if (promedio < 60){
+        estado = "Reprobado";
+    }
+    return estado;
+};
+
+const generarReporte = (estudiantes) => {
+    return estudiantes.map(estudiante => {
+        const promedio = calcularPromedio(estudiante.notas);
+        const estado = obtenerEstado(promedio);
+
+        return {
+            nombre: estudiante.nombre,
+            promedio: promedio,
+            estado: estado
+        };
+    });
+}
+
+console.log(generarReporte(estudiantes));
+
+
+//Ejercicio 4: Generador de ID's para registros de usuarios
+//Crear una función que use closures para generar IDs únicos, simulando un caso común en backend.
+
+const crearGeneradorDeIds = (prefijo) =>{
+    let contador = 0;
+    return () => {
+        contador++;
+        return `${prefijo}-${contador}`;
+    }
+}
+
+const generarIdUsuario = crearGeneradorDeIds("USR");
+
+console.log(generarIdUsuario());
+console.log(generarIdUsuario());
+console.log(generarIdUsuario());
+
+const generarIdProducto = crearGeneradorDeIds("PROD");
+
+console.log(generarIdProducto());
+console.log(generarIdProducto());
+
+//Reto
+
+const crearGeneradorDeIds2 = function(prefijo, contador){
+    let count = contador;
+    return () => {
+        count++;
+        return `${prefijo}-${count}`;
+    }
+};
+
+const generarIdUsuario2 = crearGeneradorDeIds2("USR", 100);
+
+console.log(generarIdUsuario2());
+console.log(generarIdUsuario2());
+console.log(generarIdUsuario2());
