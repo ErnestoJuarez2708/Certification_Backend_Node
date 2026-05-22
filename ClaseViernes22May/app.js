@@ -4,13 +4,24 @@ import http from "http"
 const PORT = 3000;
 
 const server = http.createServer((req, res) => {
-    console.log(req);
-    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    let url = req.url;
+    let method = req.method;
+    let urlParameters = url.split("/");
+    console.log(urlParameters);
 
-    res.end(`
-        <h1>Hola soy Ernesto desde el servidor</h1>
-        <p> Este HTML fue enviado desde local con Node.js</p>
-    `)
+    if(method == 'GET' && url == '/words'){
+        let content;
+        getContent().then(response => content = response);
+        res.setHeader("Content-Type", "application/json");
+        res.statusCode = 200;
+        res.end(JSON.parse({
+            "content" : content
+        }))
+    }
+    res.statusCode = 404;
+    res.end(JSON.parse({
+        message: "No handler for this route"
+    }))
 });
 
 server.listen(PORT, () => {
