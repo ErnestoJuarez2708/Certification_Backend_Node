@@ -3,25 +3,32 @@ import http from "http"
 
 const PORT = 3000;
 
-const server = http.createServer((req, res) => {
-    let url = req.url;
-    let method = req.method;
-    let urlParameters = url.split("/");
-    console.log(urlParameters);
+const server = http.createServer(async (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    let urlParameters = req.url.split("/");
 
-    if(method == 'GET' && url == '/words'){
-        let content;
-        getContent().then(response => content = response);
-        res.setHeader("Content-Type", "application/json");
+    console.log(urlParameters);
+    if(req.method == 'GET' && req.url == '/words'){
+        const content = await getContent();
         res.statusCode = 200;
-        res.end(JSON.parse({
-            "content" : content
-        }))
+        res.end(JSON.stringify({
+            content
+        }));
+        return;
+    }
+    if(req.method == 'POST' && urlParameters[1]=="addword" && urlParameters[2]){
+        await addText(urlParameters[2]);
+        res.statusCode = 200;
+        let message = "The word " + urlParameters[2] + " was added to the file";
+        res.end(JSON.stringify({
+            message
+        }));
+        return;
     }
     res.statusCode = 404;
-    res.end(JSON.parse({
-        message: "No handler for this route"
-    }))
+    res.end(JSON.stringify({
+        "error" : "Not method to handle the url"
+    }));
 });
 
 server.listen(PORT, () => {
