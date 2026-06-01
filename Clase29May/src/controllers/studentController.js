@@ -1,7 +1,7 @@
 import {
   getAllStudents,
   getStudentsByPassStatus,
-  createStudent,
+  createdStudent,
   getStudentByPosition,
 } from "../services/studentService.js";
 
