@@ -5,17 +5,17 @@ export function getAllStudents(){
 }
 
 export function getStudentsByPassStatus(pass){
-    return studentList.filter((student) => {
+    return studentList.filter( (student) => {
         const hasPassed = student.grade >= 60;
         return hasPassed === pass;
-    });
+    })
 }
 
-export function createdStudent(student){
+export function createStudent(student){
     studentList.push(student);
     return student;
 }
 
-export function getStudentByPosition(postion){
-    return studentList[position] ?? null;
+export function getStudentByPosition(pos){
+    return studentList[pos] ?? null;
 }
