@@ -43,6 +43,12 @@ export function saveStudent(req, res, next) {
     return next(error);
   }
 
+  if (typeof id !== "number") {
+    const error = Error("Field 'id' must be a number");
+    error.statusCode = 400;
+    return next(error);
+  }
+
   if (typeof name !== "string" || name.trim().length === 0) {
     const error = Error("Field 'name' must be a non-empty string");
     error.statusCode = 400;
@@ -55,9 +61,24 @@ export function saveStudent(req, res, next) {
     return next(error);
   }
 
+  if (!["LP", "CB", "SC"].includes(site)) {
+    const error = Error("Field 'site' must be 'LP', 'CB' or 'SC'");
+    error.statusCode = 400;
+    return next(error);
+  }
+
+  if (typeof active !== "number" || ![0, 1].includes(active)) {
+    const error = Error("Field 'active' must be 0 or 1");
+    error.statusCode = 400;
+    return next(error);
+  }
+
   const newStudent = createStudent({
+    id,
     name: name.trim(),
     grade,
+    site,
+    active
   });
 
   return res.success(201,"Student created succesfully", newStudent);
