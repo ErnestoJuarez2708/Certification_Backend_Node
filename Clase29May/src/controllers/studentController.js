@@ -6,7 +6,9 @@ import {
 } from "../services/studentService.js";
 
 export function findStudents(req, res, next) {
-  const { pass } = req.query;
+  const { site } = req.query;
+
+  let students = getAllStudents().filter(s => s.active === 1);
 
   if (pass === undefined) {
     return res.success(200,"Get all students",getAllStudents());
