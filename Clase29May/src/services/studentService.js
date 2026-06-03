@@ -11,6 +11,11 @@ export function getStudentsByPassStatus(pass){
     })
 }
 
+export function getStudentsBySite(site, students = null) {
+    const list = students || getAllStudents().filter(s => s.active === 1);
+    return list.filter(student => student.site === site);
+}
+
 export function createStudent(student){
     studentList.push(student);
     return student;

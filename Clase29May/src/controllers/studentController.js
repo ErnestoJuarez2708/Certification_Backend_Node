@@ -3,33 +3,42 @@ import {
   getStudentsByPassStatus,
   createStudent,
   getStudentByPosition,
+  getStudentsBySite
 } from "../services/studentService.js";
 
 export function findStudents(req, res, next) {
-  const { site } = req.query;
+  const { site, pass } = req.query;
 
   let students = getAllStudents().filter(s => s.active === 1);
 
-  if (pass === undefined) {
-    return res.success(200,"Get all students",getAllStudents());
+  if (site) {
+    if (!["LP", "CB", "SC"].includes(site)) {
+      const error = Error("Query parameter 'site' must be 'LP', 'CB' or 'SC'");
+      error.statusCode = 400;
+      return next(error);
+    }
+    students = getStudentsBySite(site, students);
   }
 
-  if (pass !== "true" && pass !== "false") {
-    const error = Error("Query parameter 'pass' must be 'true' or 'false'");
-    error.statusCode = 400;
-    return next(error);
+  if (pass !== undefined) {
+    if (pass !== "true" && pass !== "false") {
+      const error = Error("Query parameter 'pass' must be 'true' or 'false'");
+      error.statusCode = 400;
+      return next(error);
+    }
+    const passAsBoolean = pass === "true";
+    students = getStudentsByPassStatus(passAsBoolean, students);
+    return res.success(200, `Get students that has pass equals to ${passAsBoolean}`,students);
   }
 
-  const passAsBoolean = pass === "true";
-
-  return res.success(200,`Get students that has pass equals to ${passAsBoolean}`,getStudentsByPassStatus(passAsBoolean));
+  return res.success(200, site ? `Get active students filtered by site ${site}` : "Get all active students", students);
 }
 
 export function saveStudent(req, res, next) {
-  const { name, grade } = req.body;
+  const { id, name, grade, site, active } = req.body;
 
-  if (!name || grade === undefined) {
-    const error = Error("Fields 'name' and 'grade' are required");
+  if (id === undefined || !name || grade === undefined || site === undefined || active === undefined) {
+    const error = Error("Fields 'id', 'name', 'grade', 'site', 'active' are required");
     error.statusCode = 400;
     return next(error);
   }
