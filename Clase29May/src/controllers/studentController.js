@@ -87,15 +87,13 @@ export function saveStudent(req, res, next) {
 export function findStudentByID(req, res, next) {
   const id = Number(req.params.pos);
 
-  console.log(`Retrieving information for student in position ${position}.`);
-
   if (!Number.isInteger(id) || id <= 0) {
     const error = Error("ID must be a valid positive integer");
     error.statusCode = 400;
     return next(error);
   }
 
-  const student = getStudentById(position);
+  const student = getStudentById(id);
 
   if (!student) {
     const error = Error("Student not found");
@@ -103,5 +101,5 @@ export function findStudentByID(req, res, next) {
     return next(error);
   }
 
-  return res.success(200,`Student in pos ${position} succesfully retrieved`,student);
+  return res.success(200, `Student with id ${id} successfully retrieved`, student);
 }
