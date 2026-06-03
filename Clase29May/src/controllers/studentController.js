@@ -2,7 +2,7 @@ import {
   getAllStudents,
   getStudentsByPassStatus,
   createStudent,
-  getStudentByPosition,
+  getStudentById,
   getStudentsBySite
 } from "../services/studentService.js";
 
@@ -84,18 +84,18 @@ export function saveStudent(req, res, next) {
   return res.success(201,"Student created succesfully", newStudent);
 }
 
-export function findStudentByPosition(req, res, next) {
-  const position = Number(req.params.pos);
+export function findStudentByID(req, res, next) {
+  const id = Number(req.params.pos);
 
   console.log(`Retrieving information for student in position ${position}.`);
 
-  if (!Number.isInteger(position) || position < 0) {
-    const error = Error("Position must be a valid positive integer");
+  if (!Number.isInteger(id) || id <= 0) {
+    const error = Error("ID must be a valid positive integer");
     error.statusCode = 400;
     return next(error);
   }
 
-  const student = getStudentByPosition(position);
+  const student = getStudentById(position);
 
   if (!student) {
     const error = Error("Student not found");
