@@ -63,3 +63,26 @@ export function replaceCourse(id, body){
         data: newCourseInfo
     };
 }
+
+export function deleteCourseById(id){
+    let pos = -1;
+    for(let i=0;i<courseList.length;i++){
+        if(courseList[i]._id === id){
+            pos = i;
+            break;
+        }
+    }
+     if(pos == -1){
+        return {
+            success: false,
+            message: `Not found student with id ${studentId} to delete`
+        };
+    }
+    const deletedCourse = courseList[pos];
+    courseList.splice(pos, 1);
+
+    return {
+        success: true,
+        data: deletedCourse
+    };
+}        

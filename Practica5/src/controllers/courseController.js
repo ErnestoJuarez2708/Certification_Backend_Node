@@ -3,7 +3,8 @@ import {
     getAllCourses,
     getFilteredCourses,
     getCourseById,
-    replaceCourse
+    replaceCourse,
+    deleteCourseById
 } from "../services/courseService.js";
 import { validateCourseBody } from "../utils/courseValidator.js";
 
@@ -64,6 +65,19 @@ export function updateCourse(req, res, next){
     }
     else{
         const error = Error(upgrade.message);
+        error.statusCode = 404;
+        return next(error);
+    }
+}
+
+export function deleteCourse(req, res, next){
+    const id = Number(req.params.id);
+    const deleteCourseReponse = deleteCourseById(id);
+    if(deleteCourseReponse.success){
+        return res.success(200, `Student with id ${id} was deleted succesfully`, deleteCourseReponse.data);
+    }
+    else{
+        const error = Error(deleteCourseReponse.message);
         error.statusCode = 404;
         return next(error);
     }
