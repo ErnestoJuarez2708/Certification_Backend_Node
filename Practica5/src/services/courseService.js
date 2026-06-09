@@ -33,3 +33,33 @@ export function getCourseById(id){
         return findCourse[0];
     }
 }
+
+export function replaceCourse(id, body){
+    let pos = -1;
+    for(let i=0;i<courseList.length;i++){
+        if(courseList[i]._id === id){
+            pos = i;
+            break;
+        }
+    }
+    if(pos == -1){
+        return {
+            success: false,
+            message: `Not found student with id ${id} to update`
+        };
+    }
+    let newCourseInfo = {
+        _id: id,
+        name: body.name ?? courseList[pos].name,
+        degree: body.degree ?? courseList[pos].degree,
+        lecturer: body.lecturer ?? courseList[pos].lecturer,
+        schedule: body.schedule ?? courseList[pos].schedule,
+        credits: body.credits ?? courseList[pos].credits,
+        active: body.active ?? courseList[pos].active
+    };
+    courseList[pos] = newCourseInfo;
+    return {
+        success: true,
+        data: newCourseInfo
+    };
+}

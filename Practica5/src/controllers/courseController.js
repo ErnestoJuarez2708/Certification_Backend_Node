@@ -2,7 +2,8 @@ import {
     addCourse,
     getAllCourses,
     getFilteredCourses,
-    getCourseById
+    getCourseById,
+    replaceCourse
 } from "../services/courseService.js";
 import { validateCourseBody } from "../utils/courseValidator.js";
 
@@ -47,4 +48,23 @@ export function findCoursebyId(req, res, next){
         return next(error);
     }
     return res.success(200, `Course with id ${id} succesfully retrieved`, course);
+}
+
+export function updateCourse(req, res, next){
+    const id = Number(req.params.id);
+    const courseValidator = validateCourseBody(req.body, false);
+    if(!courseValidator.validation){
+        const error = Error(courseValidator.message);
+        error.statusCode = 400;
+        return next(error);
+    }
+    const upgrade = replaceCourse(id, req.body);
+    if(upgrade.success){
+        return res.success(200, `Student with id ${id} was updated succesfully`, upgrade.data);
+    }
+    else{
+        const error = Error(upgrade.message);
+        error.statusCode = 404;
+        return next(error);
+    }
 }
