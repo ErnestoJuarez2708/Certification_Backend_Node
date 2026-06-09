@@ -24,3 +24,12 @@ export function addCourse(course){
     courseList.push(course);
     return course;
 }
+
+export function getCourseById(id){
+    const findCourse = courseList.filter(c => c._id === Number(id));
+    if(findCourse.length == 0){
+        return null;
+    } else {
+        return findCourse[0];
+    }
+}

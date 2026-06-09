@@ -1,7 +1,8 @@
 import {
     addCourse,
     getAllCourses,
-    getFilteredCourses
+    getFilteredCourses,
+    getCourseById
 } from "../services/courseService.js";
 import { validateCourseBody } from "../utils/courseValidator.js";
 
@@ -35,4 +36,15 @@ export function saveCourse(req, res, next){
         active: Boolean(req.body.active)
     });
     return res.success(201, "Course added", newCourse);
+}
+
+export function findCoursebyId(req, res, next){
+    const id = Number(req.params.id);
+    const course = getCourseById(id);
+    if(!course){
+        const error = Error("Course Not Found");
+        error.statusCode = 404;
+        return next(error);
+    }
+    return res.success(200, `Course with id ${id} succesfully retrieved`, course);
 }
