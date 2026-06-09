@@ -1,6 +1,6 @@
 export const courseList = [
   {
-    _id: "C001",
+    _id: 1,
     name: "Certificacion Backend",
     degree: "SIS",
     lecturer: "Ing. Rodolfo Catunta",
@@ -9,7 +9,7 @@ export const courseList = [
     active: true
   },
   {
-    _id: "C002",
+    _id: 2,
     name: "Desarrollo Frontend Avanzado",
     degree: "SIS",
     lecturer: "Ing. Maria Elena Vargas",
@@ -18,7 +18,7 @@ export const courseList = [
     active: true
   },
   {
-    _id: "C003",
+    _id: 3,
     name: "Bases de Datos II",
     degree: "SIS",
     lecturer: "Dr. Carlos Mendoza",
@@ -27,7 +27,7 @@ export const courseList = [
     active: true
   },
   {
-    _id: "C004",
+    _id: 4,
     name: "Inteligencia Artificial",
     degree: "SIS",
     lecturer: "Ing. Ana Sofia Ramirez",
@@ -36,7 +36,7 @@ export const courseList = [
     active: true
   },
   {
-    _id: "C005",
+    _id: 5,
     name: "Redes y Seguridad",
     degree: "SIS",
     lecturer: "Ing. Jorge Luis Perez",
@@ -45,7 +45,7 @@ export const courseList = [
     active: true
   },
   {
-    _id: "C006",
+    _id: 6,
     name: "Desarrollo Móvil",
     degree: "SIS",
     lecturer: "Ing. Laura Gutierrez",
@@ -54,7 +54,7 @@ export const courseList = [
     active: true
   },
   {
-    _id: "C007",
+    _id: 7,
     name: "Arquitectura de Software",
     degree: "SIS",
     lecturer: "Dr. Roberto Aguilar",
@@ -63,7 +63,7 @@ export const courseList = [
     active: true
   },
   {
-    _id: "C008",
+    _id: 8,
     name: "Machine Learning",
     degree: "SIS",
     lecturer: "Ing. Patricia Flores",
@@ -72,7 +72,7 @@ export const courseList = [
     active: true
   },
   {
-    _id: "C009",
+    _id: 9,
     name: "Proyecto Integrador",
     degree: "SIS",
     lecturer: "Ing. Rodolfo Catunta",
@@ -81,7 +81,7 @@ export const courseList = [
     active: true
   },
   {
-    _id: "C010",
+    _id: 10,
     name: "DevOps y Cloud Computing",
     degree: "SIS",
     lecturer: "Ing. Diego Morales",
@@ -90,7 +90,7 @@ export const courseList = [
     active: true
   },
   {
-    _id: "C011",
+    _id: 11,
     name: "Programación Avanzada en Java",
     degree: "SIS",
     lecturer: "Ing. Sofia Herrera",
@@ -99,7 +99,7 @@ export const courseList = [
     active: true
   },
   {
-    _id: "C012",
+    _id: 12,
     name: "Ciberseguridad",
     degree: "SIS",
     lecturer: "Dr. Miguel Angel Torres",

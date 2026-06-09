@@ -19,3 +19,8 @@ export function getFilteredCourses(schedule, credits, active){
     }
     return filteredCourses;
 }
+
+export function addCourse(course){
+    courseList.push(course);
+    return course;
+}
