@@ -5,7 +5,7 @@ export const courseList = [
     degree: "SIS",
     lecturer: "Ing. Rodolfo Catunta",
     schedule: "A+",
-    credits: 6,
+    credits: 4,
     active: true
   },
   {
@@ -14,7 +14,7 @@ export const courseList = [
     degree: "SIS",
     lecturer: "Ing. Maria Elena Vargas",
     schedule: "B+",
-    credits: 5,
+    credits: 3,
     active: true
   },
   {
@@ -23,7 +23,7 @@ export const courseList = [
     degree: "SIS",
     lecturer: "Dr. Carlos Mendoza",
     schedule: "A-",
-    credits: 6,
+    credits: 3,
     active: true
   },
   {
@@ -32,7 +32,7 @@ export const courseList = [
     degree: "SIS",
     lecturer: "Ing. Ana Sofia Ramirez",
     schedule: "B",
-    credits: 7,
+    credits: 6,
     active: true
   },
   {
@@ -41,7 +41,7 @@ export const courseList = [
     degree: "SIS",
     lecturer: "Ing. Jorge Luis Perez",
     schedule: "A+",
-    credits: 5,
+    credits: 4,
     active: true
   },
   {
@@ -50,7 +50,7 @@ export const courseList = [
     degree: "SIS",
     lecturer: "Ing. Laura Gutierrez",
     schedule: "B+",
-    credits: 6,
+    credits: 4,
     active: true
   },
   {
@@ -59,7 +59,7 @@ export const courseList = [
     degree: "SIS",
     lecturer: "Dr. Roberto Aguilar",
     schedule: "A",
-    credits: 5,
+    credits: 4,
     active: true
   },
   {
@@ -68,7 +68,7 @@ export const courseList = [
     degree: "SIS",
     lecturer: "Ing. Patricia Flores",
     schedule: "B-",
-    credits: 7,
+    credits: 3,
     active: true
   },
   {
@@ -77,7 +77,7 @@ export const courseList = [
     degree: "SIS",
     lecturer: "Ing. Rodolfo Catunta",
     schedule: "A+",
-    credits: 8,
+    credits: 3,
     active: true
   },
   {
@@ -95,7 +95,7 @@ export const courseList = [
     degree: "SIS",
     lecturer: "Ing. Sofia Herrera",
     schedule: "A",
-    credits: 5,
+    credits: 4,
     active: true
   },
   {
@@ -104,7 +104,7 @@ export const courseList = [
     degree: "SIS",
     lecturer: "Dr. Miguel Angel Torres",
     schedule: "B",
-    credits: 6,
+    credits: 4,
     active: true
   }
 ];
