@@ -1,86 +1,82 @@
-import { courseList } from "../data/course.js";
+import { Course } from "../data/course.js";
 
-export function getAllCourses(){
-    return courseList;
+export async function getAllCourses(){
+    return await Course.find({});
 }
 
-export function getFilteredCourses(schedule, credits, active){
-    let filteredCourses = getAllCourses();
-    if (schedule !== undefined) {
-        filteredCourses = filteredCourses.filter(c => c.schedule === schedule);
-    }
-    if (credits !== undefined) {
-        const creditNum = Number(credits);
-        filteredCourses = filteredCourses.filter(c => c.credits === creditNum);
-    }
-    if (active !== undefined) {
-        const isActive = active === 'true' || active === true;
-        filteredCourses = filteredCourses.filter(c => c.active === isActive);
-    }
-    return filteredCourses;
+export async function getFilteredCourses(schedule, credits, active){
+    let query = {};
+
+        if (schedule !== undefined) {
+            //No pude solucionar A+ o B+, en postman, en params, utilizar B%2B o A%2B para ver
+            //horarios A+ o B+
+            query.schedule = schedule;
+        }
+
+        if (credits !== undefined) {
+            query.credits = Number(credits);
+        }
+
+        if (active !== undefined) {
+            query.active = active === 'true' || active === true;
+        }
+
+        return await Course.find(query);
 }
 
-export function addCourse(course){
-    courseList.push(course);
-    return course;
+export async function addCourse(course){
+    const newCourse = await Course.create(course);
+    return newCourse;
 }
 
-export function getCourseById(id){
-    const findCourse = courseList.filter(c => c._id === Number(id));
-    if(findCourse.length == 0){
+export async function getCourseById(id){
+    try {
+        return await Course.findById(id);
+    } catch (error) {
         return null;
-    } else {
-        return findCourse[0];
     }
 }
 
-export function replaceCourse(id, body){
-    let pos = -1;
-    for(let i=0;i<courseList.length;i++){
-        if(courseList[i]._id === id){
-            pos = i;
-            break;
+export async function replaceCourse(id, body){
+    try {
+        const updateData = {};
+        if (!id) {
+            return {
+                success: false,
+                message: `Course with id ${id} not found`
+            };
         }
-    }
-    if(pos == -1){
+
+        if (body.name !== undefined) updateData.name = body.name;
+        if (body.degree !== undefined) updateData.degree = body.degree;
+        if (body.lecturer !== undefined) updateData.lecturer = body.lecturer;
+        if (body.schedule !== undefined) updateData.schedule = body.schedule;
+        if (body.credits !== undefined) updateData.credits = Number(body.credits);
+        if (body.active !== undefined) updateData.active = Boolean(body.active);
+
+        const updatedCourse = await Course.findByIdAndUpdate(
+            id,
+            updateData,
+            { returnDocument: 'after'}
+        );
+
         return {
-            success: false,
-            message: `Not found student with id ${id} to update`
+            success: true,
+            data: updatedCourse
         };
+    } catch(error) {
+        return null;
     }
-    let newCourseInfo = {
-        _id: id,
-        name: body.name ?? courseList[pos].name,
-        degree: body.degree ?? courseList[pos].degree,
-        lecturer: body.lecturer ?? courseList[pos].lecturer,
-        schedule: body.schedule ?? courseList[pos].schedule,
-        credits: body.credits ?? courseList[pos].credits,
-        active: body.active ?? courseList[pos].active
-    };
-    courseList[pos] = newCourseInfo;
-    return {
-        success: true,
-        data: newCourseInfo
-    };
 }
 
-export function deleteCourseById(id){
-    let pos = -1;
-    for(let i=0;i<courseList.length;i++){
-        if(courseList[i]._id === id){
-            pos = i;
-            break;
-        }
-    }
-     if(pos == -1){
+export async function deleteCourseById(id){
+    const deletedCourse = await Course.findByIdAndDelete(id);
+    if (!deletedCourse) {
         return {
             success: false,
-            message: `Not found student with id ${studentId} to delete`
+            message: `Course with id ${id} not found`
         };
     }
-    const deletedCourse = courseList[pos];
-    courseList.splice(pos, 1);
-
     return {
         success: true,
         data: deletedCourse

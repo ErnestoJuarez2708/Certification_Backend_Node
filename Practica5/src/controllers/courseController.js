@@ -9,18 +9,18 @@ import {
 import { validateCourseBody } from "../utils/courseValidator.js";
 
 //TODO: Do exceptions with code 400 or 402
-export function findCourses(req, res, next){
+export async function findCourses(req, res, next){
     const {schedule, credits, active} = req.query;
-
+    let courses;
     if(schedule === undefined && credits === undefined && active === undefined){
-        return res.success(200, "Get all courses", getAllCourses());
+        courses = await getAllCourses();
+    } else {
+        courses = await getFilteredCourses(schedule, credits, active);
     }
-
-    const filtered = getFilteredCourses(schedule, credits, active);
-    return res.success(200, "Filtered courses", filtered);
+    return res.success(200, "Courses Obtained", courses);
 }
 
-export function saveCourse(req, res, next){
+export async function saveCourse(req, res, next){
     const courseValidator = validateCourseBody(req.body, true);
     
     if(!courseValidator.validation){
@@ -28,8 +28,7 @@ export function saveCourse(req, res, next){
         error.statusCode = 400;
         return next(error);
     }
-    const newCourse = addCourse({
-        _id: Date.now(),
+    const newCourse = await addCourse({
         name: req.body.name,
         degree: req.body.degree,
         lecturer: req.body.lecturer,
@@ -40,9 +39,14 @@ export function saveCourse(req, res, next){
     return res.success(201, "Course added", newCourse);
 }
 
-export function findCoursebyId(req, res, next){
-    const id = Number(req.params.id);
-    const course = getCourseById(id);
+export async function findCoursebyId(req, res, next){
+    const id = req.params.id;
+    if (!id) {
+        const error = new Error("ID is required");
+        error.statusCode = 400;
+        return next(error);
+    }
+    const course = await getCourseById(id);
     if(!course){
         const error = Error("Course Not Found");
         error.statusCode = 404;
@@ -51,34 +55,38 @@ export function findCoursebyId(req, res, next){
     return res.success(200, `Course with id ${id} succesfully retrieved`, course);
 }
 
-export function updateCourse(req, res, next){
-    const id = Number(req.params.id);
+export async function updateCourse(req, res, next){
+    const id = req.params.id;
     const courseValidator = validateCourseBody(req.body, false);
+
     if(!courseValidator.validation){
         const error = Error(courseValidator.message);
         error.statusCode = 400;
         return next(error);
     }
-    const upgrade = replaceCourse(id, req.body);
-    if(upgrade.success){
-        return res.success(200, `Student with id ${id} was updated succesfully`, upgrade.data);
-    }
-    else{
-        const error = Error(upgrade.message);
+
+    const upgrade = await replaceCourse(id, req.body);
+
+    if (!upgrade) {
+        const error =  Error("Course Not Found");
         error.statusCode = 404;
         return next(error);
     }
+    return res.success(200, `Course with id ${id} was updated successfully`, upgrade.data);
 }
 
-export function deleteCourse(req, res, next){
-    const id = Number(req.params.id);
-    const deleteCourseReponse = deleteCourseById(id);
-    if(deleteCourseReponse.success){
-        return res.success(200, `Student with id ${id} was deleted succesfully`, deleteCourseReponse.data);
+export async function deleteCourse(req, res, next){
+    const id = req.params.id;
+    if (!id) {
+        const error = new Error("ID is required");
+        error.statusCode = 400;
+        return next(error);
     }
-    else{
-        const error = Error(deleteCourseReponse.message);
+    const deleteCourseReponse = await deleteCourseById(id);
+    if (!deleteCourseReponse.success) {
+        const error = new Error(deleteCourseReponse.message);
         error.statusCode = 404;
         return next(error);
     }
+    return res.success(200, `Course with id ${id} was updated successfully`, deleteCourseReponse.data);
 }
