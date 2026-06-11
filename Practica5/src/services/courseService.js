@@ -8,8 +8,8 @@ export async function getFilteredCourses(schedule, credits, active){
     let query = {};
 
         if (schedule !== undefined) {
-            //No pude solucionar A+ o B+, en postman, en params, utilizar B%2B o A%2B para ver
-            //horarios A+ o B+
+            //No pude solucionar A+ o B+, en postman, en params, 
+            // utilizar B%2B o A%2B para ver horarios A+ o B+
             query.schedule = schedule;
         }
 
@@ -81,4 +81,52 @@ export async function deleteCourseById(id){
         success: true,
         data: deletedCourse
     };
-}        
+}
+
+export async function checkScheduleConflicts(courseIds) {
+    try {
+        const courses = await Course.find({ _id: { $in: courseIds } });
+
+        if (courses.length !== courseIds.length) {
+            return {
+                valid: false,
+                conflicts: ["Some course IDs were not found"],
+                courses: []
+            };
+        }
+
+        const scheduleMap = new Map();
+        const conflicts = [];
+
+        for (const course of courses) {
+            const schedule = course.schedule;
+            const baseSchedule = schedule.replace('+', '');
+
+            if (scheduleMap.has(baseSchedule)) {
+                const existing = scheduleMap.get(baseSchedule);
+                conflicts.push({
+                    schedule: baseSchedule,
+                    courses: [...existing, course.name]
+                });
+            } else {
+                scheduleMap.set(baseSchedule, [course.name]);
+            }
+
+            if (!scheduleMap.has(schedule)) {
+                scheduleMap.set(schedule, []);
+            }
+        }
+
+        const valid = conflicts.length === 0;
+
+        return {
+            valid,
+            conflicts: valid ? [] : conflicts,
+            courses: valid ? courses : []
+        };
+
+    } catch (error) {
+        console.error("Error checking schedule conflicts:", error);
+        throw error;
+    }
+}

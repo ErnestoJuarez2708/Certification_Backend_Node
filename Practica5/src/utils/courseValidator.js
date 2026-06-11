@@ -18,7 +18,7 @@ export function validateCourseBody(body, isComplete = true) {
     return validateCourseFields(body, propertiesInBody);
 }
 
-function validateCourseFields(body, validPropertiesInBody) {
+export function validateCourseFields(body, validPropertiesInBody) {
     let validationResult = null;
 
     for (let property of validPropertiesInBody) {
@@ -69,28 +69,28 @@ function validateCourseFields(body, validPropertiesInBody) {
 }
 
 
-function validateName(name) {
+export function validateName(name) {
     return {
         "validation": typeof name === "string" && name.trim() !== "",
         "message": "name is invalid"
     };
 }
 
-function validateDegree(degree) {
+export function validateDegree(degree) {
     return {
         "validation": typeof degree === "string" && degree.trim() !== "",
         "message": "degree is invalid"
     };
 }
 
-function validateLecturer(lecturer) {
+export function validateLecturer(lecturer) {
     return {
         "validation": typeof lecturer === "string" && lecturer.trim() !== "",
         "message": "lecturer is invalid"
     };
 }
 
-function validateSchedule(schedule) {
+export function validateSchedule(schedule) {
     const validSchedules = ["A+", "B+", "A", "B", "C", "D", "E", "Z"];
     return {
         "validation": validSchedules.includes(schedule),
@@ -98,7 +98,7 @@ function validateSchedule(schedule) {
     };
 }
 
-function validateCredits(credits) {
+export function validateCredits(credits) {
     const numCredits = Number(credits);
     return {
         "validation": Number.isInteger(numCredits) && numCredits > 0 && numCredits <= 10,
@@ -106,9 +106,19 @@ function validateCredits(credits) {
     };
 }
 
-function validateActive(active) {
+export function validateActive(active) {
+    let isValid = false;
+
+    if (typeof active === "boolean") {
+        isValid = true;
+    } 
+    else if (typeof active === "string") {
+        const normalized = active.toLowerCase().trim();
+        isValid = normalized === "true" || normalized === "false";
+    }
+
     return {
-        "validation": typeof active === "boolean",
+        "validation": isValid,
         "message": "active is invalid"
     };
 }

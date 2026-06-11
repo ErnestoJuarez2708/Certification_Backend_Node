@@ -4,7 +4,8 @@ import {
     findCourses, 
     saveCourse, 
     updateCourse,
-    deleteCourse
+    deleteCourse,
+    putSchedule
 } from "../controllers/courseController.js";
 
 const courseRoutes = Router();
@@ -18,5 +19,7 @@ courseRoutes.get("/:id", findCoursebyId);
 courseRoutes.patch("/:id", updateCourse);
 
 courseRoutes.delete("/:id", deleteCourse);
+
+courseRoutes.put("/schedule", putSchedule);
 
 export default courseRoutes;

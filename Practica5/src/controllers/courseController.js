@@ -4,20 +4,54 @@ import {
     getFilteredCourses,
     getCourseById,
     replaceCourse,
-    deleteCourseById
+    deleteCourseById,
+    checkScheduleConflicts
 } from "../services/courseService.js";
-import { validateCourseBody } from "../utils/courseValidator.js";
+import { 
+    validateCourseBody, 
+    validateSchedule, 
+    validateCredits,
+    validateActive 
+} from "../utils/courseValidator.js";
 
-//TODO: Do exceptions with code 400 or 402
 export async function findCourses(req, res, next){
     const {schedule, credits, active} = req.query;
-    let courses;
-    if(schedule === undefined && credits === undefined && active === undefined){
-        courses = await getAllCourses();
-    } else {
-        courses = await getFilteredCourses(schedule, credits, active);
+    if (schedule !== undefined) {
+        const scheduleValidation = validateSchedule(schedule);
+        if (!scheduleValidation.validation) {
+            const error = new Error(scheduleValidation.message);
+            error.statusCode = 400;
+            return next(error);
+        }
     }
-    return res.success(200, "Courses Obtained", courses);
+    if (credits !== undefined) {
+        const creditsValidation = validateCredits(credits);
+        if (!creditsValidation.validation) {
+            const error = new Error(creditsValidation.message);
+            error.statusCode = 400;
+            return next(error);
+        }
+    }
+    if (active !== undefined) {
+        const activeValidation = validateActive(active);
+        if (!activeValidation.validation) {
+            const error = new Error(activeValidation.message);
+            error.statusCode = 400;
+            return next(error);
+        }
+    }
+    try {
+        let courses;
+        if (schedule === undefined && credits === undefined && active === undefined) {
+            courses = await getAllCourses();
+        } else {
+            courses = await getFilteredCourses(schedule, credits, active);
+        }
+
+        return res.success(200, "Courses Obtained", courses);
+    } catch (error) {
+        next(error);
+    }
 }
 
 export async function saveCourse(req, res, next){
@@ -89,4 +123,33 @@ export async function deleteCourse(req, res, next){
         return next(error);
     }
     return res.success(200, `Course with id ${id} was updated successfully`, deleteCourseReponse.data);
+}
+
+export async function putSchedule(req, res, next) {
+    try {
+        const { courseIds } = req.body;
+
+        if (!Array.isArray(courseIds) || courseIds.length === 0) {
+            const error = new Error("Body must contain a non-empty array of courseIds");
+            error.statusCode = 400;
+            return next(error);
+        }
+
+        const result = await checkScheduleConflicts(courseIds);
+
+        if (!result.valid) {
+            return res.success(409, "Schedule conflicts detected", {
+                conflicts: result.conflicts,
+                message: "Some courses have overlapping schedules"
+            });
+        }
+
+        return res.success(200, "Schedule is valid", {
+            courses: result.courses,
+            message: "All courses have compatible schedules"
+        });
+
+    } catch (error) {
+        next(error);
+    }
 }
